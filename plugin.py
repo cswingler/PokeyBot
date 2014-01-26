@@ -78,7 +78,7 @@ class PokeyBot(callbacks.Plugin):
         "http://lakupo.com/qu/ghacks/userpics/philippe-hugs.jpg"))
         irc.noReply()
         return
-    hug = wrap(hug, ['inChannel'])
+        hug = wrap(hug, ['inChannel'])
 
 Class = PokeyBot
 
