@@ -56,7 +56,7 @@ class PokeyBot(callbacks.Plugin):
         if (num == None):
             self.log.info("Randomly getting a Pokey the Pengiun Panel:")
             latestP = pb.PokeyBot()
-            r = pb.randomPanel()
+            r = latestP.randomPanel()
             irc.queueMsg(ircmsgs.privmsg(channel, r))
             irc.noReply
             return
