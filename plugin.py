@@ -79,6 +79,7 @@ class PokeyBot(callbacks.Plugin):
         given, returns a strip at random.
         """
 
+        latestP = pb.PokeyBot()
         postNum = randint(1,latestP.LatestPost())
         self.log.info("Getting pokey strip number: " + str(postNum))
         p = pb.PokeyBot(postNum)
