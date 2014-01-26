@@ -63,7 +63,7 @@ class PokeyBot(callbacks.Plugin):
         else:
             postNum = num
         self.log.info("Getting pokey strip number: " + str(postNum))
-        p = PokeyBot.PokeyBot(postNum)
+        p = pb.PokeyBot(postNum)
         r = p.ircContent()
         self.log.debug("Pokeying %q in %s due to %s.",
                        r, channel, msg.prefix)
@@ -81,7 +81,7 @@ class PokeyBot(callbacks.Plugin):
 
         postNum = randint(1,latestP.LatestPost())
         self.log.info("Getting pokey strip number: " + str(postNum))
-        p = PokeyBot.PokeyBot(postNum)
+        p = pb.PokeyBot(postNum)
         r = p.ircContent()
         self.log.debug("Pokeying %q in %s due to %s.",
                        r, channel, msg.prefix)
