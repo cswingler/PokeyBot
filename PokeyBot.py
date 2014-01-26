@@ -16,9 +16,11 @@ class PokeyBot:
     entryNumber = int()
 
     # PokeyUrl is the url path to a Pokey blog post
-    PokeyUrl = "http://www.yellow5.com/pokey/archive/index^ENTRYNUM^"
+    PokeyUrl = "http://www.yellow5.com/pokey/archive/index^ENTRYNUM^.html"
 
     PokeyUrlNone = "http://www.yellow5.com/pokey/"
+    PokeyArchive = "http://www.yellow5.com/pokey/archive/"
+
 
     # urlFile is the result from urllib.urlopen() action, which
     # is a file-like object.
@@ -41,10 +43,9 @@ class PokeyBot:
         self.entryNumber = entryNumber
         self.__constructPokeyUrl()
         self.__getUrl()
-        #self.__readBody()
-        #self.soup = BeautifulSoup(self.wholeBody)
-        #self.__findContent()
-        #self.__setTitle()
+        self.__readBody()
+        self.soup = BeautifulSoup(self.wholeBody)
+        self.__setTitle()
         return
 
     def __constructPokeyUrl(self):
@@ -59,7 +60,7 @@ class PokeyBot:
         """
         try:
             self.urlFile = urllib2.urlopen(self.PokeyUrl)
-        except HTTPError:
+        except urllib2.HTTPError:
             self.urlFile = None
         return
 
@@ -69,7 +70,7 @@ class PokeyBot:
         stores it in self.wholeBody
         """
         body = self.urlFile.read()
-        self.wholeBody = unicode(body, self.__ENCODING)
+        self.wholeBody = body
         return
 
     def __findContent(self):
@@ -83,10 +84,20 @@ class PokeyBot:
         """
         Sets the title of the blog post.
         """
-        try:
-            self.entryTitle = self.soup.find('div', {'class':'entry_title'}).a.getText()
-        except AttributeError:
-            self.entryTitle = None
+        if (self.entryNumber == None):
+            self.entryTitle = "Latest comic" # Latest comic is untitled.
+        else:
+            urlFile = urllib2.urlopen(self.PokeyArchive)
+            body = urlFile.read()
+            latestSoup = BeautifulSoup(body)
+            allLinks = latestSoup.findAll('a')
+            pageName = "index%s.html" % self.entryNumber
+            for link in allLinks:
+                try:
+                    if (link.get('href') == pageName):
+                        self.entryTitle = link.text
+                except:
+                    self.entryTitle = "Unknown"
         return
 
     def ircContent(self):
@@ -107,42 +118,30 @@ class PokeyBot:
         #    Text is of type BeautifulSoup.NavigableString.
 
         ircString = unicode()
-        try:
-            for item in self.entryBodyHtml:
-                if (type(item) == Tag):
-                            if(item.getText() != ''):
-                                # Some link text
-                                ircString = ircString.rstrip('\n')
-                                ircString += item.getText() + u" "
-                                ircString += u"< " + item.get("href") + u" >"
-                if (item.find('img') != None):
-                    # Image.
-                    ircString += item.find('img')['src'] + u"\n"
-                elif (item.find('embed') != None):
-                    # Youtube video.
-                    ircString += item.find('embed')['src'] + u"\n"
+        ircString = "%s: " % self.entryTitle
+        imgUrlPath = self.PokeyUrl
+        if imgUrlPath.find('html') > 0:
+            # Kick to Archive.
+            imgUrlPath = "http://www.yellow5.com/pokey/archive/"
 
-                # Text:
-                if (type(item) == NavigableString):
-                    ircString += item + u"\n"
-        except TypeError:
-            ircString = u"No blog post found."
+        for image in self.soup.findAll('img'):
+            ircString += (imgUrlPath + image.get('src') + u" ")
             
         return ircString
 
     def latestPost(self):
         """
-        Returns the integer number of the most recent blog post.
+        Returns the integer number of the most recent comic in the archive.
         """
-        allLinks = self.soup.findAll('a')
+        urlFile = urllib2.urlopen(self.PokeyArchive)
+        body = urlFile.read()
+        latestSoup = BeautifulSoup(body)
+        allLinks = latestSoup.findAll('a')
         for link in allLinks:
-            url = link.get("href")
-            result = re.match("http://sisinPokey.blog17.fc2.com/blog-entry-....html", url)
-            if (result != None):
-                pos = re.search("[0-9][0-9][0-9]", url)
-                start = pos.start()
-                end = pos.end()
-                return int(url[start:end])
-        return None
+            try:
+                largest = link.get('href').split('.')[0].split('x')[1]
+            except:
+                pass
+        return largest
 
 # vim: set swiftwidth=4 tabstop=4

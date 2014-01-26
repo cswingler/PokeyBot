@@ -34,63 +34,43 @@ import supybot.plugins as plugins
 import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 import supybot.ircmsgs as ircmsgs
-import MaruGet
+import PokeyBot
 from random import randint
 
 
-class MaruBlog(callbacks.Plugin):
+class PokeyBot(callbacks.Plugin):
     """
-    This plugin gets a Maru blog post.
-    Simlpy call say "maru postnumber" and the post will
+    This plugin gets a Pokey the Penguin comic.
+    Simlpy call say "pokey postnumber" and the comic will
     be returned to the channel. Omitting the postnumber
-    will get the most recent post.
+    will get a strip at random.
     """
     pass
- 
-    def maru(self, irc, msg, args, channel, num=None):
-        """ [<post number>]
 
-        Prints a blog post to the channel.  If no post number is given,
-        returns a random entry.
+    def pokey(self, irc, msg, args, channel, num=None):
+        """[comic number]
+
+        Prints a pokey the penguin comic to the channel. If no post number is
+        given, returns a strip at random.
         """
-        if(num == None):
-            self.log.info("Randomly getting a maru post:")
-            latestM = MaruGet.MaruBlog()
-            postNum = randint(2,latestM.latestPost())
+        if (num == None):
+            self.log.info("Randomly getting a Pokey the Pengiun Comic:")
+            latestP = PokeyBot.PokeyBot()
+            postNum = randint(1,latestP.LatestPost())
         else:
-            postNum = num
-        self.log.info("Getting maru post number: " + str(postNum))
-        m = MaruGet.MaruBlog(postNum)
-        r = m.ircContent()
-        self.log.debug("Maruing %q in %s due to %s.",
-                r, channel, msg.prefix)
-        self.log.debug("Type: %s ", type(r))
-        r = unicode(r).encode("utf-8")
-        maruList = list()
-
-        irc.queueMsg(ircmsgs.privmsg(channel, "Maru blog entry #" +\
-            str(postNum) +" (" + m.maruUrl + ")" +":"))
-        for maruLine in r.split('\n'):
-            try:
-                maruList.append(unicode(maruLine).encode("ascii"))
-            except UnicodeDecodeError:
-                pass
-        for line in maruList:
-            irc.queueMsg(ircmsgs.privmsg(channel, line))
+            postNime = num
+        self.log.info("Getting pokey strip number: " + str(postNum))
+        p = PokeyBot.PokeyBot(postNum)
+        r = p.ircContent()
+        self.log.debug("Pokeying %q in %s due to %s.",
+                       r, channel, msg.prefix)
+        self.log.debug("Type :%s ", type(r))
+        r = unicode(r).unicode("utf-8")
+        irc.queueMsg(r)
         irc.noReply()
-    maru = wrap(maru, ['inChannel', optional('int')])
+    pokey = wrap(pokey, ['inChannel',optional('int')])
 
-    def randmaru(self, irc, msg, args, channel):
-        """
-        Deprecated.  Use maru with no parameters instead.
-        """
-        irc.queueMsg(ircmsgs.privmsg(channel, "'randmaru' will be " +\
-                "abolished. Use the 'maru' with no parameters " +\
-                "instead of the circle. Mew."))
-        irc.noReply()
-    randmaru = wrap(randmaru, ['inChannel'])
-
-    def hug(self, irc, msg, args, channel):
+   def hug(self, irc, msg, args, channel):
         """
         Huuuuuuuuuuuuuuuugs!
         """
@@ -100,6 +80,6 @@ class MaruBlog(callbacks.Plugin):
         return
     hug = wrap(hug, ['inChannel'])
 
-Class = MaruBlog
+Class = PokeyBot
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
