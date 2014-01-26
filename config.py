@@ -37,7 +37,7 @@ def configure(advanced):
     # user or not.  You should effect your configuration by manipulating the
     # registry as appropriate.
     from supybot.questions import expect, anything, something, yn
-    conf.registerPlugin('MaruBlog', True)
+    conf.registerPlugin('PokeyBot', True)
 
 
 MaruBlog = conf.registerPlugin('MaruBlog')
