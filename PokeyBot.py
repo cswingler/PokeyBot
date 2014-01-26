@@ -41,10 +41,10 @@ class PokeyBot:
         self.entryNumber = entryNumber
         self.__constructPokeyUrl()
         self.__getUrl()
-        self.__readBody()
-        self.soup = BeautifulSoup(self.wholeBody)
-        self.__findContent()
-        self.__setTitle()
+        #self.__readBody()
+        #self.soup = BeautifulSoup(self.wholeBody)
+        #self.__findContent()
+        #self.__setTitle()
         return
 
     def __constructPokeyUrl(self):
@@ -109,22 +109,22 @@ class PokeyBot:
         ircString = unicode()
         try:
             for item in self.entryBodyHtml:
-            if (type(item) == Tag):
-                        if(item.getText() != ''):
-                            # Some link text
-                            ircString = ircString.rstrip('\n')
-                            ircString += item.getText() + u" "
-                            ircString += u"< " + item.get("href") + u" >"
-                if(item.find('img') != None):
-                # Image.
-                ircString += item.find('img')['src'] + u"\n"
-                elif(item.find('embed') != None):
-                # Youtube video.
-                ircString += item.find('embed')['src'] + u"\n"
+                if (type(item) == Tag):
+                            if(item.getText() != ''):
+                                # Some link text
+                                ircString = ircString.rstrip('\n')
+                                ircString += item.getText() + u" "
+                                ircString += u"< " + item.get("href") + u" >"
+                if (item.find('img') != None):
+                    # Image.
+                    ircString += item.find('img')['src'] + u"\n"
+                elif (item.find('embed') != None):
+                    # Youtube video.
+                    ircString += item.find('embed')['src'] + u"\n"
 
-            # Text:
-            if (type(item) == NavigableString):
-                ircString += item + u"\n"
+                # Text:
+                if (type(item) == NavigableString):
+                    ircString += item + u"\n"
         except TypeError:
             ircString = u"No blog post found."
             
@@ -139,10 +139,10 @@ class PokeyBot:
             url = link.get("href")
             result = re.match("http://sisinPokey.blog17.fc2.com/blog-entry-....html", url)
             if (result != None):
-            pos = re.search("[0-9][0-9][0-9]", url)
-            start = pos.start()
-            end = pos.end()
-            return int(url[start:end])
+                pos = re.search("[0-9][0-9][0-9]", url)
+                start = pos.start()
+                end = pos.end()
+                return int(url[start:end])
         return None
 
 # vim: set swiftwidth=4 tabstop=4
