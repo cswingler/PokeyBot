@@ -54,9 +54,12 @@ class PokeyBot(callbacks.Plugin):
         given, returns a strip at random.
         """
         if (num == None):
-            self.log.info("Randomly getting a Pokey the Pengiun Comic:")
+            self.log.info("Randomly getting a Pokey the Pengiun Panel:")
             latestP = pb.PokeyBot()
-            postNum = randint(1,latestP.LatestPost())
+            r = pb.randomPanel()
+            irc.queueMsg(ircmsgs.privmsg(channel, r))
+            irc.noReply
+            return
         else:
             postNum = num
         self.log.info("Getting pokey strip number: " + str(postNum))
@@ -68,9 +71,24 @@ class PokeyBot(callbacks.Plugin):
         irc.queueMsg(ircmsgs.privmsg(channel, r))
         irc.noReply()
         
-        irc.queueMsg(r)
-        irc.noReply()
     pokey = wrap(pokey, ['inChannel',optional('int')])
+
+    def randpokey(self, irc, msg, args, channel):
+        """
+        Prints a pokey the penguin comic to the channel. If no post number is
+        given, returns a strip at random.
+        """
+
+        postNum = randint(1,latestP.LatestPost())
+        self.log.info("Getting pokey strip number: " + str(postNum))
+        p = PokeyBot.PokeyBot(postNum)
+        r = p.ircContent()
+        self.log.debug("Pokeying %q in %s due to %s.",
+                       r, channel, msg.prefix)
+        self.log.debug("Type :%s ", type(r))
+        irc.queueMsg(ircmsgs.privmsg(channel, r))
+        irc.noReply()
+    randpokey = wrap(randpokey, ['inChannel'])
 
     def hug(self, irc, msg, args, channel):
         """
@@ -80,7 +98,7 @@ class PokeyBot(callbacks.Plugin):
         "http://lakupo.com/qu/ghacks/userpics/philippe-hugs.jpg"))
         irc.noReply()
         return
-        hug = wrap(hug, ['inChannel'])
+    hug = wrap(hug, ['inChannel'])
 
 Class = PokeyBot
 

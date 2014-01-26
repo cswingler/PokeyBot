@@ -5,6 +5,7 @@ from BeautifulSoup import BeautifulSoup
 from BeautifulSoup import NavigableString
 from BeautifulSoup import Tag
 import re
+from random import randint
 
 class PokeyBot:
     """
@@ -100,23 +101,24 @@ class PokeyBot:
                     self.entryTitle = "Unknown"
         return
 
+    def randomPanel(self):
+        """
+        Returns a string of a randomly chosen panel.
+        """
+        latestPost = self.latestPost()
+        randomStripNum = randint(1,latestPost)
+        pb = PokeyBot(randomStripNum)
+        ircString = unicode()
+        images = pb.soup.findAll('img')
+        randomPanel = images[randint(1,len(images))]
+        imgUrlPath = "http://www.yellow5.com/pokey/archive/"
+        ircString = (imgUrlPath + randomPanel.get('src'))
+        return ircString
+
     def ircContent(self):
         """
         Returns a string of the content, properly formatted for posting an in IRC channel. 
         """
-        # This could be interesting. The blog posts are messes of <br /> 
-        # tags, and not using something HTML-aware could be painful.
-        # This will most likely be accomplished using parts of Beautiful
-        # Soup.
-
-        # There are a few tags that seem to be used in fc2 blogs, at least
-        # this one in particular.
-        #  * br tags are abused for formatting
-        #  * img tags contain pictures
-        #    and are stored within a tags.
-        #  * Text is just placed outside of everything.
-        #    Text is of type BeautifulSoup.NavigableString.
-
         ircString = unicode()
         ircString = "%s: " % self.entryTitle
         imgUrlPath = self.PokeyUrl
