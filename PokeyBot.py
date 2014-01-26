@@ -8,7 +8,7 @@ import re
 
 class PokeyBot:
     """
-    PokeyBlog is a simple little class that gets a Pokey The Penguin! post.
+    PokeyBot t is a simple little class that gets a Pokey The Penguin! post.
     """
 
 
@@ -139,7 +139,7 @@ class PokeyBot:
         allLinks = latestSoup.findAll('a')
         for link in allLinks:
             try:
-                largest = link.get('href').split('.')[0].split('x')[1]
+                largest = int(link.get('href').split('.')[0].split('x')[1])
             except:
                 pass
         return largest

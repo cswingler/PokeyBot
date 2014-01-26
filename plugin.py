@@ -34,7 +34,7 @@ import supybot.plugins as plugins
 import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 import supybot.ircmsgs as ircmsgs
-import PokeyBot
+import PokeyBot as pb
 from random import randint
 
 
@@ -55,22 +55,24 @@ class PokeyBot(callbacks.Plugin):
         """
         if (num == None):
             self.log.info("Randomly getting a Pokey the Pengiun Comic:")
-            latestP = PokeyBot.PokeyBot()
+            latestP = pb.PokeyBot()
             postNum = randint(1,latestP.LatestPost())
         else:
-            postNime = num
+            postNum = num
         self.log.info("Getting pokey strip number: " + str(postNum))
         p = PokeyBot.PokeyBot(postNum)
         r = p.ircContent()
         self.log.debug("Pokeying %q in %s due to %s.",
                        r, channel, msg.prefix)
         self.log.debug("Type :%s ", type(r))
-        r = unicode(r).unicode("utf-8")
+        irc.queueMsg(ircmsgs.privmsg(channel, r))
+        irc.noReply()
+        
         irc.queueMsg(r)
         irc.noReply()
     pokey = wrap(pokey, ['inChannel',optional('int')])
 
-   def hug(self, irc, msg, args, channel):
+    def hug(self, irc, msg, args, channel):
         """
         Huuuuuuuuuuuuuuuugs!
         """
