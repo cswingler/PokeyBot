@@ -80,7 +80,7 @@ class PokeyBot(callbacks.Plugin):
         """
 
         latestP = pb.PokeyBot()
-        postNum = randint(1,latestP.LatestPost())
+        postNum = randint(1,latestP.latestPost())
         self.log.info("Getting pokey strip number: " + str(postNum))
         p = pb.PokeyBot(postNum)
         r = p.ircContent()
