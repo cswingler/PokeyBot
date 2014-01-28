@@ -110,7 +110,7 @@ class PokeyBot:
         pb = PokeyBot(randomStripNum)
         ircString = unicode()
         images = pb.soup.findAll('img')
-        randomPanel = images[randint(1,len(images))]
+        randomPanel = images[randint(1,len(images) - 1)]
         imgUrlPath = "http://www.yellow5.com/pokey/archive/"
         ircString = (imgUrlPath + randomPanel.get('src'))
         return ircString
