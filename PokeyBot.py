@@ -110,6 +110,8 @@ class PokeyBot:
         pb = PokeyBot(randomStripNum)
         ircString = unicode()
         images = pb.soup.findAll('img')
+        # Remove the Patreon gif
+        images.remove('../patreon.gif')
         randomPanel = images[randint(1,len(images) - 1)]
         imgUrlPath = "http://www.yellow5.com/pokey/archive/"
         ircString = (imgUrlPath + randomPanel.get('src'))
@@ -127,7 +129,8 @@ class PokeyBot:
             imgUrlPath = "http://www.yellow5.com/pokey/archive/"
 
         for image in self.soup.findAll('img'):
-            ircString += (imgUrlPath + image.get('src') + u" ")
+            if str(image.get('src')).find('patreon') < 0:
+                ircString += (imgUrlPath + image.get('src') + u" ")
             
         return ircString
 
