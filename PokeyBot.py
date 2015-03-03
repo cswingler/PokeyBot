@@ -125,7 +125,7 @@ class PokeyBot:
         imgUrlPath = self.PokeyUrl
         if imgUrlPath.find('html') > 0:
             # Kick to Archive. Archives have single-image versions:
-            return "http://www.yellow5.com/pokey/archive/pokey%s.gif" % self.entryNumber
+            return "%s: http://www.yellow5.com/pokey/archive/pokey%s.gif" % (self.entryTitle, self.entryNumber)
 
         for image in self.soup.findAll('img'):
             if str(image.get('src')).find('patreon') < 0:
